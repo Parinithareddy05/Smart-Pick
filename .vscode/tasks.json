@@ -1,0 +1,58 @@
+{
+    // VS Code Tasks for SmartPick
+    // Access via: Ctrl+Shift+P → "Tasks: Run Task"
+    "version": "2.0.0",
+    "tasks": [
+
+        // ── STEP 1: One-click full setup ──────────────────────────────────────
+        {
+            "label": "1 ▶ Setup: Install All Dependencies",
+            "type": "shell",
+            "command": "${workspaceFolder}\\setup.bat",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+
+        // ── STEP 2: Generate ML results (must run before Flask) ───────────────
+        {
+            "label": "2 ▶ Run: ML Pipeline (generate results first)",
+            "type": "shell",
+            "command": "${workspaceFolder}\\run_pipeline.bat",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+
+        // ── STEP 3: Start the web app ─────────────────────────────────────────
+        {
+            "label": "3 ▶ Run: Flask Web App",
+            "type": "shell",
+            "command": "${workspaceFolder}\\run_app.bat",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}

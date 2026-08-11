@@ -1,0 +1,27 @@
+{
+    // ── Python settings ───────────────────────────────────────────────────────
+
+    // Use the virtual environment created by setup.bat
+    "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+
+    // Show type errors as you type
+    "python.analysis.typeCheckingMode": "basic",
+
+    // Add src/ to Python path so all imports resolve correctly
+    "python.analysis.extraPaths": ["${workspaceFolder}/src"],
+
+    // ── Editor quality-of-life ────────────────────────────────────────────────
+
+    // Highlight the line your cursor is on
+    "editor.renderLineHighlight": "all",
+
+    // Show trailing whitespace
+    "editor.renderWhitespace": "trailing",
+
+    // Hide clutter from the file explorer
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        "**/.venv": false
+    }
+}

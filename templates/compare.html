@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartPick — Best Price Across Amazon &amp; Flipkart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div>
+        <span class="logo">🛒 SmartPick</span>
+        <p class="tagline">Find the exact product at the best price</p>
+      </div>
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
+        <span class="icon">🌙</span><span class="label">Dark</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <main class="hero container">
+      <h2>Compare Prices Across Sites</h2>
+      <p class="hero-sub">
+        Paste any product link from Amazon or Flipkart.<br/>
+        We find the <strong>exact same product</strong> on both sites and rank by best value.
+      </p>
+
+      {% if error %}
+      <div class="error-banner">⚠️ {{ error }}</div>
+      {% endif %}
+
+      <form id="compare-form" class="search-form" action="/compare" method="POST">
+        <div class="search-bar">
+          <input type="url" name="url" required
+                 placeholder="Paste product URL from Amazon or Flipkart..."
+                 style="border-radius:50px 0 0 50px"/>
+          <button type="submit" class="btn-primary" id="compare-btn">Compare →</button>
+        </div>
+
+        <div class="persona-selector" style="margin-top:30px">
+          <p>What matters most to you?</p>
+          <div class="persona-cards">
+            <label class="persona-card">
+              <input type="radio" name="persona" value="budget"/>
+              <div class="card-body">
+                <span class="icon">💰</span><strong>Best Price</strong><small>Maximize savings</small>
+              </div>
+            </label>
+            <label class="persona-card">
+              <input type="radio" name="persona" value="quality"/>
+              <div class="card-body">
+                <span class="icon">⭐</span><strong>Best Quality</strong><small>Top-rated products</small>
+              </div>
+            </label>
+            <label class="persona-card">
+              <input type="radio" name="persona" value="balanced" checked/>
+              <div class="card-body">
+                <span class="icon">⚖️</span><strong>Best Value</strong><small>Price + quality balance</small>
+              </div>
+            </label>
+          </div>
+        </div>
+      </form>
+
+      <!-- Loading overlay -->
+      <div id="loading-overlay" style="display:none">
+        <div class="loading-box">
+          <div class="spinner"></div>
+          <h3>Searching Amazon &amp; Flipkart...</h3>
+          <p id="loading-msg">Connecting to Amazon and Flipkart...</p>
+          <small>Takes about 15–25 seconds · Finding exact product match</small>
+        </div>
+      </div>
+
+      <!-- How it works -->
+      <div class="how-it-works">
+        <h3>How it works</h3>
+        <div class="steps">
+          <div class="step"><span class="step-num">1</span><p>Paste any product URL from Amazon or Flipkart</p></div>
+          <div class="step"><span class="step-num">2</span><p>We search both sites for the <strong>exact same product</strong> (≥80% match)</p></div>
+          <div class="step"><span class="step-num">3</span><p>AI ranks by review confidence, price trend & your preference</p></div>
+          <div class="step"><span class="step-num">4</span><p>Click <strong>Buy</strong> on the best ranked result</p></div>
+        </div>
+      </div>
+
+      <!-- Supported sites -->
+      <div class="site-logos" style="margin-top:24px">
+        <span class="site-badge site-amazon" style="font-size:0.9rem;padding:7px 20px">🛍 Amazon</span>
+        <span class="site-badge site-flipkart" style="font-size:0.9rem;padding:7px 20px">🛍 Flipkart</span>
+      </div>
+
+      <!-- Features -->
+      <div class="features" style="margin-top:44px">
+        <div class="feature">
+          <span class="feat-icon">🎯</span>
+          <strong>Exact Product Match</strong>
+          <p>Only shows the same product, not similar ones. Filters by ≥80% name similarity.</p>
+        </div>
+        <div class="feature">
+          <span class="feat-icon">🔍</span>
+          <strong>Review Confidence</strong>
+          <p>Weights ratings by review volume — 48,000 reviews beats 8 reviews.</p>
+        </div>
+        <div class="feature">
+          <span class="feat-icon">📉</span>
+          <strong>Price Trend</strong>
+          <p>Know if the price is dropping, stable, or rising before you buy.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container"><p>IEEE Research Project — Review-Confidence Weighted Value Ranking</p></div>
+  </footer>
+  <script src="/static/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(conda run:*)",
+      "Bash(conda env:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:pricehistory.app)",
+      "Bash(python3 -c \"\nimport json\nwith open\\('/home/vamshi/mlproject/results/evaluation_report.json'\\) as f:\n    d = json.load\\(f\\)\npp = d.get\\('per_product', []\\)\nprint\\(f'Products completed: {len\\(pp\\)}'\\)\nfor p in pp:\n    print\\(f'  {p[\\\\\"label\\\\\"]} \\({p[\\\\\"category\\\\\"]}\\): n={p[\\\\\"n_products\\\\\"]}, real_hist={p[\\\\\"pti\\\\\"][\\\\\"real_history_pct\\\\\"]}%, r2={p[\\\\\"pti\\\\\"][\\\\\"mean_r2\\\\\"]}'\\)\n    for k, v in p['personas'].items\\(\\):\n        print\\(f'    {k}: pavs={v[\\\\\"sat_pavs\\\\\"]:.4f}, lift_price={v[\\\\\"lift_vs_price\\\\\"]:+.2f}%, lift_rating={v[\\\\\"lift_vs_rating\\\\\"]:+.2f}%'\\)\n        print\\(f'       spearman_price={v[\\\\\"spearman_vs_price\\\\\"]:.4f}, spearman_rating={v[\\\\\"spearman_vs_rating\\\\\"]:.4f}'\\)\n\" 2>/dev/null)",
+      "Bash(python3 << 'EOF'\nimport json\nwith open\\('/home/vamshi/mlproject/results/evaluation_report.json'\\) as f:\n    d = json.load\\(f\\)\npp = d.get\\('per_product', []\\)\nprint\\(f'Products completed: {len\\(pp\\)}'\\)\nfor p in pp:\n    print\\(f'\\\\n  {p[\"label\"]} \\({p[\"category\"]}\\): n={p[\"n_products\"]}, real_hist={p[\"pti\"][\"real_history_pct\"]}%, r2={p[\"pti\"][\"mean_r2\"]}'\\)\n    for k, v in p['personas'].items\\(\\):\n        print\\(f'    {k}: pavs={v[\"sat_pavs\"]:.4f}, lift_price={v[\"lift_vs_price\"]:+.2f}%, spearman_price={v[\"spearman_vs_price\"]:.4f}'\\)\nEOF)",
+      "Bash(python3 -c \"\nimport json\nc = json.load\\(open\\('/home/vamshi/mlproject/data/eval_cache.json'\\)\\)\nprint\\(f'Cache entries so far: {len\\(c\\)}'\\)\nfor url, v in c.items\\(\\):\n    rows = len\\(v.get\\('scraped_rows', []\\)\\)\n    ph = len\\(v.get\\('price_history', {}\\)\\)\n    print\\(f'  {url[-20:]}: {rows} products, {ph} price histories'\\)\n\")",
+      "Bash(tail -20 /tmp/claude-1000/-home-vamshi-mlproject/tasks/ab8973a776a63b40c.output 2>/dev/null | python3 -c \"\nimport sys, json\nfor line in sys.stdin:\n    line = line.strip\\(\\)\n    if not line: continue\n    try:\n        d = json.loads\\(line\\)\n        if d.get\\('type'\\) == 'assistant':\n            content = d.get\\('message',{}\\).get\\('content',[]\\)\n            for c in content:\n                if isinstance\\(c, dict\\) and c.get\\('type'\\) == 'text':\n                    print\\(c['text'][:300]\\)\n    except: pass\n\" 2>/dev/null || echo \"agent still analyzing...\")",
+      "Bash(kill 323838 323840 323846 2>/dev/null; echo \"Killed\")",
+      "Bash(pkill -9 -f \"evaluate.py\" 2>/dev/null; pkill -9 -f \"pricehistory\" 2>/dev/null; pkill -9 -f \"playwright\" 2>/dev/null; echo \"Cleared\")",
+      "Bash(which pandoc:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cleanup-processes.sh --startup",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cleanup-processes.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

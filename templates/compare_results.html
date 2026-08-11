@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ query }} — Comparison — SmartPick</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo">🛒 SmartPick</a>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <a href="/compare" style="color:var(--text-muted);font-size:0.88rem;font-weight:600">← New Comparison</a>
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
+          <span class="icon">🌙</span><span class="label">Dark</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <main class="container results-page">
+
+      <div class="compare-header">
+        <h2>Comparing: <strong>"{{ query }}"</strong></h2>
+        <p class="result-count">
+          {{ total }} products found across
+          <span class="site-badge site-amazon">Amazon</span>
+          <span class="site-badge site-flipkart">Flipkart</span>
+          · Ranked by <strong>{{ persona_label }}</strong>
+        </p>
+      </div>
+
+      <!-- Persona switcher -->
+      <div class="persona-switcher">
+        <span>Re-rank for:</span>
+        <form id="rerank-form" action="/compare" method="POST" style="display:none">
+          <input type="hidden" name="url" id="rerank-url" value="{{ original_url }}"/>
+          <input type="hidden" name="persona" id="rerank-persona" value="{{ persona }}"/>
+        </form>
+        {% for key, label in [('budget','💰 Best Price'), ('quality','⭐ Best Quality'), ('balanced','⚖️ Best Value')] %}
+          <a href="javascript:void(0)"
+             onclick="rerankTo('{{ key }}')"
+             class="persona-pill {% if persona == key %}active{% endif %}">{{ label }}</a>
+        {% endfor %}
+      </div>
+
+      <!-- Best pick -->
+      {% if products %}
+      {% set best = products[0] %}
+      <div class="best-pick">
+        <div class="best-label">🏆 Best Pick for {{ persona_label }}</div>
+        <div class="best-content">
+          <div>
+            <span class="site-badge site-{{ best.site }}">{{ best.site_label }}</span>
+            <h3 style="margin-top:8px">{{ best.product_name[:100] }}{% if best.product_name|length > 100 %}…{% endif %}</h3>
+            <div style="display:flex;gap:16px;align-items:baseline;margin-top:10px;flex-wrap:wrap">
+              <span class="price-large">{{ best.display_price }}</span>
+              <span class="rating-large">★ {{ best.display_rating }}</span>
+              <span class="review-count">{{ best.display_reviews }} reviews</span>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+              <span class="badge {{ best.confidence_class }}">{{ best.confidence_label }}</span>
+              {% if 'Dropping' in best.trend_label %}
+                <span class="badge trend-dropping">📉 Price Dropping — Good time to buy</span>
+              {% elif 'Rising' in best.trend_label %}
+                <span class="badge trend-rising">📈 Price Rising — Buy now</span>
+              {% else %}
+                <span class="badge trend-stable">➡️ Price Stable</span>
+              {% endif %}
+            </div>
+          </div>
+          <a href="{{ best.buy_url }}" target="_blank" class="btn-buy-large">Buy Now →</a>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Comparison table -->
+      <div class="table-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Site</th><th>Product</th><th>Price</th>
+              <th>Rating</th><th>Confidence</th><th>Price Trend</th>
+              <th>Value Score</th><th>Buy</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in products %}
+            <tr class="{% if loop.index == 1 %}best-row{% endif %}">
+              <td><strong>#{{ p.live_rank }}</strong></td>
+              <td><span class="site-badge site-{{ p.site }}">{{ p.site_label }}</span></td>
+              <td class="product-cell">
+                <a href="{{ p.buy_url }}" target="_blank">
+                  {{ p.product_name[:70] }}{% if p.product_name|length > 70 %}…{% endif %}
+                </a>
+              </td>
+              <td><strong>{{ p.display_price }}</strong></td>
+              <td style="white-space:nowrap">
+                <span style="color:#f59e0b;font-weight:700">★ {{ p.display_rating }}</span>
+                <span style="color:var(--text-muted);font-size:0.80rem;margin-left:4px">({{ p.display_reviews }})</span>
+              </td>
+              <td><span class="badge {{ p.confidence_class }}">{{ p.confidence_label.replace(' Confidence','') }}</span></td>
+              <td>
+                {% if 'Dropping' in p.trend_label %}
+                  <span class="badge trend-dropping">📉 Dropping</span>
+                {% elif 'Rising' in p.trend_label %}
+                  <span class="badge trend-rising">📈 Rising</span>
+                {% else %}
+                  <span class="badge trend-stable">➡️ Stable</span>
+                {% endif %}
+              </td>
+              <td>
+                <div class="score-bar-wrap" style="min-width:90px">
+                  <div class="score-bar"><div class="score-fill" style="width:{{ p.display_score }}%"></div></div>
+                  <span class="score-num">{{ p.display_score }}</span>
+                </div>
+              </td>
+              <td><a href="{{ p.buy_url }}" target="_blank" class="btn-buy">Buy</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:28px;text-align:center">
+        <a href="/compare" class="btn-primary" style="border-radius:50px;display:inline-block;padding:13px 30px">
+          ← Compare Another Product
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container"><p>IEEE Research Project — Review-Confidence Weighted Value Ranking</p></div>
+  </footer>
+
+  <script src="/static/main.js"></script>
+  <script>
+    function rerankTo(persona) {
+      document.getElementById("rerank-persona").value = persona;
+      document.getElementById("rerank-form").submit();
+    }
+  </script>
+</body>
+</html>

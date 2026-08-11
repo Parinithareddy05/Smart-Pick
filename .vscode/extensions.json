@@ -1,0 +1,18 @@
+{
+    // Recommended VS Code extensions for this project.
+    // VS Code will prompt you to install these when you open the folder.
+    "recommendations": [
+
+        // Python support — syntax highlighting, IntelliSense, run and debug
+        "ms-python.python",
+
+        // Pylance — faster and smarter Python autocomplete
+        "ms-python.vscode-pylance",
+
+        // Python debugger — set breakpoints and inspect variables
+        "ms-python.debugpy",
+
+        // Jupyter notebook support (optional, useful for data exploration)
+        "ms-toolsai.jupyter"
+    ]
+}

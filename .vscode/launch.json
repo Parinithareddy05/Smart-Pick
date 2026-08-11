@@ -1,0 +1,71 @@
+{
+    // VS Code Debug/Run configurations — press F5 or use Run → Start Debugging
+    "version": "0.2.0",
+    "configurations": [
+
+        // ── Run Flask web app ─────────────────────────────────────────────────
+        {
+            "name": "▶ Run Flask App",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/app.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_PORT": "5000"
+            },
+            // After starting, open http://localhost:5000 in your browser
+            "postDebugTask": ""
+        },
+
+        // ── Run ML pipeline (generates results/ charts + CSV) ─────────────────
+        {
+            "name": "▶ Run ML Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/main.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+
+        // ── Debug Flask app (with breakpoints) ────────────────────────────────
+        {
+            "name": "🐛 Debug Flask App",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/app.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_PORT": "5000"
+            }
+        },
+
+        // ── Debug ML pipeline (with breakpoints) ──────────────────────────────
+        {
+            "name": "🐛 Debug ML Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/main.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+
+        // ── Generate paper figures only ───────────────────────────────────────
+        {
+            "name": "▶ Generate Paper Figures",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/generate_paper.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
