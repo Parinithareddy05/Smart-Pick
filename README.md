@@ -1,2 +1,2 @@
-# Smart-Pick
- Smart Pick : An Intelligent Product Recommendation System
+# SmartPick
+AI-powered e-commerce product comparision and recommendation system
